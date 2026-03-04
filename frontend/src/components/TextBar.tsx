@@ -77,8 +77,14 @@ function Textbar() {
              hover:bg-gray-300 
              transition duration-300 
              ml-8 flex items-center gap-2 cursor-pointer"
-                    onClick={sendMessage}
+             onClick={sendMessage}
 
+            >
+                <svg
+                    className="w-5 h-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
                 >
                     <svg
                         className="w-5 h-5"

@@ -30,14 +30,19 @@ io.on('connection', (socket) => {
             system: true,
             text: `${nickname} se conectó`
         })
+
+        io.emit("users", Object.values(users))
     })
 
     socket.on('message', (message) => {
         const nickname = users[socket.id]
+
+        console.log(message)
         io.emit("mesage", {
             system: false,
             user: nickname,
             text,
+            senderId: socket.id
         })
     })
 
@@ -51,6 +56,7 @@ io.on('connection', (socket) => {
         })
 
         delete users[socket.id]
+         io.emit("users", Object.values(users))
     })
 })
 
