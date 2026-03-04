@@ -15,6 +15,7 @@ function Textbar() {
         if(e.key === "Enter" && !e.shiftKey){
             e.preventDefault()
             sendMessage()
+            setMessage("")
         }
     }
 
@@ -25,6 +26,7 @@ function Textbar() {
                 placeholder="Escribe tu mensaje..." 
                 className="w-full h-20 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 margin-right-4"
                 onChange={(e) => setMessage(e.target.value)}
+                value={message}
                 onKeyDown={handleKeyDown}
             />
 

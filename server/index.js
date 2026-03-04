@@ -41,7 +41,8 @@ io.on('connection', (socket) => {
         io.emit("mesage", {
             system: false,
             user: nickname,
-            text: message,
+            text,
+            senderId: socket.id
         })
     })
 
