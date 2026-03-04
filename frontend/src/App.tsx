@@ -7,6 +7,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<JoinPage />} />
+      {/*<Route path="/chat" element={<ChatPage />} />*/ }
     </Routes>
   )
 }

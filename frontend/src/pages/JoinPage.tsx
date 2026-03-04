@@ -1,6 +1,24 @@
+import { useState } from "react";
 import Button from "../components/Button";
+import { useNavigate } from "react-router-dom";
+import { socket } from "../socket";
 
 export default function JoinPage(){
+    const[nickname, setNickname] = useState("");
+    const[error, setError] = useState("");
+    const navigation =useNavigate();
+
+    const handleJoin = () => {
+        if(!nickname.trim()){
+            setError("Please enter a nickname");
+            return;
+        }
+
+        socket.connect()
+        socket.emit("join", nickname)
+
+        navigation("/chat", {state: nickname})
+    }
     return(
         <div className="fixed inset-0 bg-linear-to-r from-[#3c75f3]  to-[#9F67D6] flex items-center justify-center">
             <div className="bg-white/10 backdrop-blur-lg p-12 rounded-2xl shadow-2xl flex flex-col gap-8 items-center">
@@ -11,8 +29,20 @@ export default function JoinPage(){
                     </svg>
                 </div>
                 <div className="w-full flex flex-col gap-10">
-                    <input placeholder="Nickname" className="text-white py-3 border-b-3 border-white bg-transparent outline-none focus:border-yellow-300 transition-all duration-300 "/>
-                    <Button label="Join" type="button" className="text-xl font-bold text-white px-25 py-5 rounded-full border-2 hover:bg-white hover:text-[#3c75f3] transition-all duration-300" />
+                    <input placeholder="Nickname" value={nickname}
+                     onChange={(e) => {
+                        setNickname(e.target.value);
+                        setError("");
+                     }}
+                     className="text-white py-3 border-b-3 border-white bg-transparent outline-none focus:border-yellow-300 transition-all duration-300 "/>
+                     {error && (
+                        <span className="text-red-300 text-sm">{error}</span>
+                     )}
+                    <Button label="Join" 
+                    type="button" 
+                    onClick={handleJoin}
+                    className="text-xl font-bold text-white px-25 py-5 rounded-full border-2 hover:bg-white hover:text-[#3c75f3] transition-all duration-300" 
+                    />
                 </div>
             </div>
         </div>

@@ -7,10 +7,53 @@ import {PORT} from './config.js'
 
 const app = express();
 const server = http.createServer(app)
-const io = new SocketServer(server)
 
 app.use(cors())
 app.use(morgan("dev"))
+const io = new SocketServer(server, {
+    cors: {
+        origin: 'http://localhost:5173',
+    },
+})
 
-app.listen(PORT);
-console.log(`Server listening at http://localhost:${PORT}`);
+const users = {}
+
+io.on('connection', (socket) => {
+    console.log(socket.id)
+
+    socket.on('join', (nickname) => {
+        users[socket.id] = nickname
+
+        console.log(nickname)
+
+        io.emit("message", {
+            system: true,
+            text: `${nickname} se conectó`
+        })
+    })
+
+    socket.on('message', (message) => {
+        const nickname = users[socket.id]
+        io.emit("mesage", {
+            system: false,
+            user: nickname,
+            text,
+        })
+    })
+
+    socket.on("disconnect", () => {
+        const nickname = users[socket.id]
+
+        io.emit("message", {
+            system: true,
+            user: nickname,
+            text: `${nickname} se desconectó`
+        })
+
+        delete users[socket.id]
+    })
+})
+
+server.listen(PORT, () => {
+    console.log(`Server listening in ${PORT}`)
+})
