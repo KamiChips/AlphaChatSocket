@@ -1,37 +1,104 @@
+import { useState } from "react";
+import { socket } from "../socket";
+import ChatBubble from "./ChatBubble";
+
 function Textbar() {
+    interface Message {
+        id: number;
+        user: string;
+        text: string;
+    }
+
+    const currentUser = "Mayrin";
+
+    const [messages, setMessages] = useState<Message[]>([
+        { id: 1, user: "Kamila", text: "Hola, ¿cómo estás?" },
+        { id: 2, user: "Mayrin", text: "¡Hola! Estoy bien, y tú?" },
+    ]);
+
+    const [input, setInput] = useState("");
+
+    const handleSend = () => {
+        if (input.trim() === "") return;
+
+        const newMessage: Message = {
+            id: Date.now(),
+            user: currentUser,
+            text: input,
+        };
+
+        setMessages([...messages, newMessage]);
+        setInput("");
+    };
+
+    const [message, setMessage] = useState("");
+
+    const sendMessage = () => {
+        if (!message.trim()) return
+        socket.emit("message", message)
+        setMessage("")
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault()
+            sendMessage()
+        }
+    }
+
     return (
-        <nav className="fixed bottom-0 left-0 w-full h-30 z-50 bg-[#7665cc] text-white flex justify-between items-center px-8">
+        <>
+            {/* Messages Section */}
+            < div className="mt-20 ml-64 p-6 pb-32" >
+                {
+                    messages.map((msg) => (
+                        <ChatBubble
+                            key={msg.id}
+                            message={msg}
+                            currentUser={currentUser}
+                        />
+                    ))
+                }
+            </div >
 
-            <textarea
-                placeholder="Escribe tu mensaje..." className="w-full h-20 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 margin-right-4"
-            />
+            <nav className="fixed bottom-0 left-0 w-full h-30 z-50 bg-[#7665cc] text-white flex justify-between items-center px-8">
 
-            <button
-                className="bg-white text-blue-600 
+                <textarea
+                    placeholder="Escribe tu mensaje..."
+                    className="w-full h-20 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 margin-right-4"
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                />
+
+                <button
+                    className="bg-white text-blue-600 
              px-4 py-2 rounded-md 
              font-semibold 
-             hover:bg-gray-100 
+             hover:bg-gray-300 
              transition duration-300 
              ml-8 flex items-center gap-2 cursor-pointer"
-            >
-                <svg
-                    className="w-5 h-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
+                    onClick={sendMessage}
+
                 >
-                    <path
-                        fillRule="evenodd"
-                        d="M12 2a1 1 0 0 1 .932.638l7 18a1 1 0 0 1-1.326 1.281L13 19.517V13a1 1 0 1 0-2 0v6.517l-5.606 2.402a1 1 0 0 1-1.326-1.281l7-18A1 1 0 0 1 12 2Z"
-                        clipRule="evenodd"
-                    />
-                </svg>
+                    <svg
+                        className="w-5 h-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M12 2a1 1 0 0 1 .932.638l7 18a1 1 0 0 1-1.326 1.281L13 19.517V13a1 1 0 1 0-2 0v6.517l-5.606 2.402a1 1 0 0 1-1.326-1.281l7-18A1 1 0 0 1 12 2Z"
+                            clipRule="evenodd"
+                        />
+                    </svg>
 
-                <span>Send</span>
-                
-            </button>
+                    <span>Send</span>
 
-        </nav >
+                </button>
+
+            </nav >
+        </>
     );
 }
 
