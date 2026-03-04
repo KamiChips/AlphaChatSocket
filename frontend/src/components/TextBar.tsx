@@ -2,35 +2,19 @@ import { useState } from "react";
 import { socket } from "../socket";
 import ChatBubble from "./ChatBubble";
 
-function Textbar() {
-    interface Message {
-        id: number;
-        user: string;
-        text: string;
-    }
+interface Message{
+    system?:boolean;
+    user?: string;
+    text: string;
+    senderId?: string;
+}
 
-    const currentUser = "Mayrin";
+interface TextBarProps{
+    messages: Message[];
+    currentUser: string;
+}
 
-    const [messages, setMessages] = useState<Message[]>([
-        { id: 1, user: "Kamila", text: "Hola, ¿cómo estás?" },
-        { id: 2, user: "Mayrin", text: "¡Hola! Estoy bien, y tú?" },
-    ]);
-
-    const [input, setInput] = useState("");
-
-    const handleSend = () => {
-        if (input.trim() === "") return;
-
-        const newMessage: Message = {
-            id: Date.now(),
-            user: currentUser,
-            text: input,
-        };
-
-        setMessages([...messages, newMessage]);
-        setInput("");
-    };
-
+function Textbar( {messages, currentUser}:TextBarProps) {
     const [message, setMessage] = useState("");
 
     const sendMessage = () => {
@@ -49,11 +33,10 @@ function Textbar() {
     return (
         <>
             {/* Messages Section */}
-            < div className="mt-20 ml-64 p-6 pb-32" >
-                {
-                    messages.map((msg) => (
+            < div className="mt-20 ml-64 p-6 pb-32 w-full" >
+                {messages.map((msg, index) => (
                         <ChatBubble
-                            key={msg.id}
+                            key={index}
                             message={msg}
                             currentUser={currentUser}
                         />
@@ -68,6 +51,7 @@ function Textbar() {
                     className="w-full h-20 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 margin-right-4"
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyDown={handleKeyDown}
+                    value={message}
                 />
 
                 <button
@@ -86,12 +70,6 @@ function Textbar() {
                     viewBox="0 0 24 24"
                     fill="currentColor"
                 >
-                    <svg
-                        className="w-5 h-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                    >
                         <path
                             fillRule="evenodd"
                             d="M12 2a1 1 0 0 1 .932.638l7 18a1 1 0 0 1-1.326 1.281L13 19.517V13a1 1 0 1 0-2 0v6.517l-5.606 2.402a1 1 0 0 1-1.326-1.281l7-18A1 1 0 0 1 12 2Z"
@@ -107,5 +85,6 @@ function Textbar() {
         </>
     );
 }
+
 
 export default Textbar;

@@ -38,10 +38,10 @@ io.on('connection', (socket) => {
         const nickname = users[socket.id]
 
         console.log(message)
-        io.emit("mesage", {
+        io.emit("message", {
             system: false,
             user: nickname,
-            text,
+            text: message,
             senderId: socket.id
         })
     })

@@ -1,7 +1,10 @@
+import { socket } from "../socket";
+
 interface Message {
-  id: number;
-  user: string;
+  system?: boolean;
+  user?: string;
   text: string;
+  senderId?: string;
 }
 
 interface ChatBubbleProps {
@@ -9,8 +12,16 @@ interface ChatBubbleProps {
   currentUser: string;
 }
 
-export default function ChatBubble({ message, currentUser }: ChatBubbleProps) {
-  const isMe = message.user === currentUser;
+export default function ChatBubble({ message }: ChatBubbleProps) {
+  const isMe = message.senderId === socket.id;
+
+  if(message.system){
+    return(
+      <div className="text-center text-gray-400 italic mb-2">
+        {message.text}
+      </div>
+    )
+  }
 
   return (
     <div className={`flex ${isMe ? "justify-end" : "justify-start"} mb-4`}>
@@ -30,7 +41,7 @@ export default function ChatBubble({ message, currentUser }: ChatBubbleProps) {
             isMe ? "text-indigo-200 text-right" : "text-indigo-600 text-left"
           }`}
         >
-          {message.user}
+          {isMe ? "Me" : message.user}
         </p>
 
         <p className="text-sm">{message.text}</p>
