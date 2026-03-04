@@ -41,7 +41,7 @@ export default function JoinPage(){
                     <Button label="Join" 
                     type="button" 
                     onClick={handleJoin}
-                    className="text-xl font-bold text-white px-25 py-5 rounded-full border-2 hover:bg-white hover:text-[#3c75f3] transition-all duration-300" 
+                    className="text-xl font-bold text-white px-25 py-5 rounded-full border-2 hover:bg-white hover:text-[#3c75f3] transition-all duration-300"  
                     />
                 </div>
             </div>

@@ -1,4 +1,14 @@
+import { useNavigate } from "react-router-dom";
+import { socket } from "../socket";
+
 function Navbar() {
+  
+  const navigation = useNavigate();
+
+  const handleDisconnect = () =>{
+    socket.disconnect()
+    navigation("/", )
+  }
   return (
     <nav className="fixed top-0 left-0 w-full h-20 z-50 
                     bg-linear-to-r from-[#3c75f3] to-[#7665cc] 
@@ -13,7 +23,8 @@ function Navbar() {
                          px-4 py-2 rounded-md 
                          font-semibold 
                          hover:bg-gray-100 
-                         transition duration-300 cursor-pointer">
+                         transition duration-300 cursor-pointer"
+              onClick={handleDisconnect}>
         Desconectarse
       </button>
 

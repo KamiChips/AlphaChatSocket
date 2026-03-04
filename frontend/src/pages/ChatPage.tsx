@@ -1,17 +1,14 @@
-import { useState } from 'react';
-import Navbar from '../assets/NavBar';
-import Textbar from '../assets/TextBar';
-import UserBar from '../assets/UserBar';
+import Navbar from '../components/NavBar';
+import Textbar from '../components/TextBar';
+import UserBar from '../components/UserBar';
 
 export default function ChatPage() {
-  const [users] = useState<string[]>(["Kamila", "Mayrin"]);
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
       <div className="flex flex-1">
-        <UserBar users={users} />
+        <UserBar/>
         <Textbar />
       </div>
     </div>

@@ -1,18 +1,42 @@
+import { useState } from "react";
+import { socket } from "../socket";
+
 function Textbar() {
+
+    const[message, setMessage] = useState("");
+
+    const sendMessage = () => {
+        if(!message.trim()) return
+        socket.emit("message", message)
+        setMessage("")
+    }
+    
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if(e.key === "Enter" && !e.shiftKey){
+            e.preventDefault()
+            sendMessage()
+        }
+    }
+
     return (
         <nav className="fixed bottom-0 left-0 w-full h-30 z-50 bg-[#7665cc] text-white flex justify-between items-center px-8">
 
             <textarea
-                placeholder="Escribe tu mensaje..." className="w-full h-20 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 margin-right-4"
+                placeholder="Escribe tu mensaje..." 
+                className="w-full h-20 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 margin-right-4"
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
             />
 
             <button
                 className="bg-white text-blue-600 
              px-4 py-2 rounded-md 
              font-semibold 
-             hover:bg-gray-100 
+             hover:bg-gray-300 
              transition duration-300 
              ml-8 flex items-center gap-2 cursor-pointer"
+             onClick={sendMessage}
+
             >
                 <svg
                     className="w-5 h-5"

@@ -1,9 +1,25 @@
+import { useEffect, useState } from "react";
+import { socket } from "../socket";
+
 interface UsersProps {
-  users: string[];
   className?: string;
 }
 
-export default function Users({ users, className = "" }: UsersProps) {
+
+
+export default function Users({ className = "" }: UsersProps) {
+
+  const [users, setUsers] = useState<string[]>([])
+
+  useEffect(() => {
+    socket.on("users", (userList: string[]) => {
+      setUsers(userList)
+    })
+
+    return () => {
+      socket.off("users")
+    }
+  })
   return (
     <aside
       className={`
