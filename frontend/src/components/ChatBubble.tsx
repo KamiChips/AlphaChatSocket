@@ -30,6 +30,9 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
           max-w-xs md:max-w-md
           px-4 py-2
           rounded-2xl
+          whitespace-pre-wrap
+          wrap-break-word
+          text-left
           shadow-md
           ${isMe 
             ? "bg-indigo-500 text-white rounded-br-none" 
